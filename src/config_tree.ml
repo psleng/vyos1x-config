@@ -72,7 +72,7 @@ let set node path value behaviour =
         let path_remaining = Vylist.complement path path_existing in
         let values = match value with None -> [] | Some v -> [v] in
         let end_data = {default_data with values=values; leaf=true} in
-        Vytree.insert_multi_level default_data node path_existing path_remaining end_data
+        Vytree.insert_multi_level ~position:Lexical default_data node path_existing path_remaining end_data
 
 let get_values node path =
     let node' = Vytree.get node path in
@@ -155,6 +155,15 @@ let value_paths_of_tree node =
                         in List.fold_left f a vs
                     in (p, a')
     in List.rev (snd (Vytree.fold_tree_with_path (func node) ([], []) node))
+
+let prune_delete node path =
+    if is_tag_value node path then
+        let tag_path = Util.drop_last path in
+        let terminal = Vytree.is_terminal_path node tag_path in
+        match terminal with
+        | true -> delete node tag_path None
+        | false -> node
+    else node
 
 
 module Renderer =
