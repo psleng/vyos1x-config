@@ -31,3 +31,12 @@ val lex_order : string list -> string list -> int
 val colex_order : string list -> string list -> int
 
 val is_empty : 'a list -> bool
+
+val is_sublist : 'a list -> 'a list -> bool
+
+val flag : 'a list -> 'a list list
+
+
+exception End_of_read of in_channel
+
+val file_compare : ?ignore_line_prefix:string -> string -> string -> bool
